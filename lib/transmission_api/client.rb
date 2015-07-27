@@ -25,8 +25,10 @@ class TransmissionApi::Client
     @debug_mode = opts[:debug_mode] || false
   end
 
-  def all
+  def all(opts = {})
     log "get_torrents"
+
+    fields = opts.fetch(:fields) { self.fields }
 
     response =
       post(

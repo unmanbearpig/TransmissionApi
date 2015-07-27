@@ -108,6 +108,19 @@ class ClientTest < Minitest::Test
     assert_equal( "torrents", @client.all )
   end
 
+  def test_all_accepts_list_of_fields
+    opts_expected = {
+      :method => "torrent-get",
+      :arguments => { :fields => ["overridden_field"] }
+    }
+    result = { "arguments" => { "torrents" => "torrents" } }
+
+    @client.stubs(:fields).returns(["default_field"])
+    @client.expects(:post).with( opts_expected ).returns( result )
+
+    assert_equal( "torrents", @client.all(fields: ['overridden_field']) )
+  end
+
   def test_find
     opts_expected = {
       :method => "torrent-get",
