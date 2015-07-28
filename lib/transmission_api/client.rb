@@ -30,30 +30,27 @@ class TransmissionApi::Client
 
     fields = opts.fetch(:fields) { self.fields }
 
-    response =
-      post(
-        :method => "torrent-get",
-        :arguments => {
-          :fields => fields
-        }
-      )
-
-    response["arguments"]["torrents"]
+    get_torrents(fields: fields)
   end
 
-  def find(id)
+  def find(id, opts = {})
     log "get_torrent: #{id}"
 
-    response =
-      post(
-        :method => "torrent-get",
-        :arguments => {
-          :fields => fields,
-          :ids => [id]
-        }
-      )
+    fields = opts.fetch(:fields) { self.fields }
 
-    response["arguments"]["torrents"].first
+    get_torrents(:fields => fields,
+                 :ids => [id]).first
+  end
+
+
+  def get_torrents(arguments)
+    log "get_torrents"
+
+    post_params = { :method => "torrent-get", arguments: arguments }
+
+    response = post(post_params)
+
+    response["arguments"]["torrents"]
   end
 
   def create(filename)
@@ -78,7 +75,7 @@ class TransmissionApi::Client
         :method => "torrent-remove",
         :arguments => {
           :ids => [id],
-          :"delete-local-data" => true
+                       :"delete-local-data" => true
         }
       )
 

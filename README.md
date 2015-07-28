@@ -34,8 +34,10 @@ Or install it yourself as:
     torrents = transmission_api_client.all
     # same as .all without arguments, but fetches only specified fields
     torrents = transmission_api_client.all(fields: ['id', 'name', 'addedDate'])
-
+    # find with default fields
     torrent = transmission_api_client.find(id)
+    # find with custom fields
+    torrent = transmission_api_client.find(id, fields: ['id', 'name'])
     torrent = transmission_api_client.create("http://torrent.com/nice_pic.torrent")
     transmission_api_client.destroy(id)
 

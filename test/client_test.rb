@@ -134,6 +134,32 @@ class ClientTest < Minitest::Test
     assert_equal( "torrent1", @client.find(1) )
   end
 
+  def test_find_accepts_fields
+    opts_expected = {
+      :method => "torrent-get",
+      :arguments => { :fields => ['id'], :ids => [1] }
+    }
+    result = { "arguments" => { "torrents" => ["torrent1"] } }
+
+    @client.stubs(:fields).returns("fields")
+    @client.expects(:post).with( opts_expected ).returns( result )
+
+    assert_equal( "torrent1", @client.find(1, fields: ['id']) )
+  end
+
+  def test_get_torrents
+    opts_expected = {
+      :method => "torrent-get",
+      :arguments => :test_arguments
+    }
+    result = { "arguments" => { "torrents" => ["torrent1"] } }
+
+    @client.stubs(:fields).returns("fields")
+    @client.expects(:post).with( opts_expected ).returns( result )
+
+    assert_equal( ["torrent1"], @client.get_torrents(:test_arguments) )
+  end
+
   def test_create
     opts_expected = {
       :method => "torrent-add",
